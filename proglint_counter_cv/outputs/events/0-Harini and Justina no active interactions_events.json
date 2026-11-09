@@ -1,0 +1,99 @@
+{
+  "meta": {
+    "video": "0-Harini and Justina no active interactions.mp4",
+    "camera": "0-Harini and Justina no active interactions (auto)",
+    "model": "models/yolo26s-pose.pt",
+    "stats": {
+      "frames_processed": 164,
+      "stride": 1,
+      "elapsed_s": 4.96,
+      "throughput_fps": 33.05,
+      "pose_inference_ms_per_frame": null,
+      "detections_from_cache": true,
+      "scene_cuts": [],
+      "id_switches": [],
+      "untracked_detections": 0,
+      "setup": "automatic",
+      "setup_info": {
+        "participants": [
+          1,
+          2
+        ],
+        "layout": "side by side",
+        "customer_anchor": [
+          204.1,
+          293.8
+        ],
+        "staff_anchor": [
+          985.5,
+          371.4
+        ],
+        "min_person_height_px": 214.3,
+        "line_position": 0.5,
+        "line_rule": "midway between the two people",
+        "customer_track": 2,
+        "staff_track": 1,
+        "role_rule": "roles UNCERTAIN (hand cues not clear): customer = left person by default",
+        "role_score": null,
+        "role_cues": {
+          "hand_drop_forearms": [
+            1.65,
+            null
+          ],
+          "hand_movement_forearms_per_s": [
+            0.79,
+            null
+          ]
+        },
+        "roles_uncertain": true,
+        "swapped": false
+      },
+      "device": "cpu",
+      "inference_backend": "openvino",
+      "platform": "Windows-10-10.0.26100-SP0"
+    },
+    "warnings": []
+  },
+  "counting_rules": {
+    "unit": "one row per observation episode (a crossing, or the contact assessment of a customer-staff episode); rows of the same exchange share an interaction_id",
+    "interaction_unit": "one interaction per customer-staff exchange; outcome = strongest row (LIKELY_HANDSHAKE > LIKELY_HAND_CONTACT > UNCERTAIN > BOUNDARY_CROSSING)",
+    "mutually_exclusive": [
+      "LIKELY_HAND_CONTACT",
+      "LIKELY_HANDSHAKE",
+      "UNCERTAIN"
+    ],
+    "separate_family": "BOUNDARY_CROSSING",
+    "distance_units": "pixels of the original video; *_forearms = multiples of forearm length"
+  },
+  "counts": {
+    "BOUNDARY_CROSSING": 0,
+    "LIKELY_HAND_CONTACT": 0,
+    "LIKELY_HANDSHAKE": 0,
+    "UNCERTAIN": 0
+  },
+  "interaction_counts": {
+    "total": 0,
+    "LIKELY_HANDSHAKE": 0,
+    "LIKELY_HAND_CONTACT": 0,
+    "UNCERTAIN": 0,
+    "BOUNDARY_CROSSING": 0
+  },
+  "interactions": [],
+  "events": [],
+  "suppressed_candidates": [],
+  "candidate_episodes": [],
+  "notes": [],
+  "state_timeline": [
+    {
+      "state": "NO_ACTIVE_INTERACTION",
+      "start": 0.0,
+      "end": 0.1
+    },
+    {
+      "state": "HAND_APPROACHING",
+      "start": 0.133,
+      "end": 5.433
+    }
+  ],
+  "pair_states": {}
+}

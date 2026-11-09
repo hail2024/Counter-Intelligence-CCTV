@@ -1,0 +1,6 @@
+# Labelled from frame sheets (0.15-0.25 s steps), one annotator. Roles left blank (any person).
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,1.40,2.40,,handshake (top-down)
+HANDSHAKE,1.40,2.40,,
+AMBIGUOUS_CONTACT,4.40,7.50,,papers exchanged in the middle of the desk
+CROSSING,7.80,10.60,,customer's arm reaches across to the staff's laptop

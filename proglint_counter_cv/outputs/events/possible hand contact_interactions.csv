@@ -1,0 +1,2 @@
+interaction_id,outcome,start_timestamp,end_timestamp,customer_track_ids,staff_track_ids,crossing_count,crossing_directions,contact_assessment,handshake_score,contact_score,event_ids,interpretation,uncertainty_reason,status
+I01,UNCERTAIN,1.867,3.167,2,1,0,,UNCERTAIN,,0,E001,"Uncertain - possible hand contact not confirmed: both reached out and the hands came within 0.24 forearms for 1.2s, but never touched",hands came within 0.24 forearms for 1.2s but never touched,closed

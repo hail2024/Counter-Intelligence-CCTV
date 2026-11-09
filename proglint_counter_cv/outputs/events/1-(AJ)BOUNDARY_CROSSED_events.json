@@ -1,0 +1,192 @@
+{
+  "meta": {
+    "video": "1-(AJ)BOUNDARY_CROSSED.mp4",
+    "camera": "1-(AJ)BOUNDARY_CROSSED (auto)",
+    "model": "models/yolo26s-pose.pt",
+    "stats": {
+      "frames_processed": 176,
+      "stride": 1,
+      "elapsed_s": 18.2,
+      "throughput_fps": 9.67,
+      "pose_inference_ms_per_frame": 55.6,
+      "detections_from_cache": false,
+      "scene_cuts": [],
+      "id_switches": [],
+      "untracked_detections": 0,
+      "setup": "automatic",
+      "setup_info": {
+        "participants": [
+          1,
+          2
+        ],
+        "layout": "side by side",
+        "customer_anchor": [
+          732.8,
+          235.5
+        ],
+        "staff_anchor": [
+          259.8,
+          407.4
+        ],
+        "min_person_height_px": 103.8,
+        "line_position": 0.481,
+        "line_rule": "midway between the two people's usual hand positions",
+        "customer_track": 1,
+        "staff_track": 2,
+        "role_rule": "staff = the person working at the desk (hands kept up and still), score 5.7",
+        "role_score": 5.68,
+        "role_cues": {
+          "hand_drop_forearms": [
+            2.14,
+            0.62
+          ],
+          "hand_movement_forearms_per_s": [
+            0.98,
+            0.36
+          ]
+        },
+        "roles_uncertain": false,
+        "swapped": false
+      },
+      "device": "cpu",
+      "inference_backend": "openvino",
+      "platform": "Windows-10-10.0.26100-SP0"
+    },
+    "warnings": []
+  },
+  "counting_rules": {
+    "unit": "one row per observation episode (a crossing, or the contact assessment of a customer-staff episode); rows of the same exchange share an interaction_id",
+    "interaction_unit": "one interaction per customer-staff exchange; outcome = strongest row (LIKELY_HANDSHAKE > LIKELY_HAND_CONTACT > UNCERTAIN > BOUNDARY_CROSSING)",
+    "mutually_exclusive": [
+      "LIKELY_HAND_CONTACT",
+      "LIKELY_HANDSHAKE",
+      "UNCERTAIN"
+    ],
+    "separate_family": "BOUNDARY_CROSSING",
+    "distance_units": "pixels of the original video; *_forearms = multiples of forearm length"
+  },
+  "counts": {
+    "BOUNDARY_CROSSING": 1,
+    "LIKELY_HAND_CONTACT": 0,
+    "LIKELY_HANDSHAKE": 0,
+    "UNCERTAIN": 0
+  },
+  "interaction_counts": {
+    "total": 1,
+    "LIKELY_HANDSHAKE": 0,
+    "LIKELY_HAND_CONTACT": 0,
+    "UNCERTAIN": 0,
+    "BOUNDARY_CROSSING": 1
+  },
+  "interactions": [
+    {
+      "interaction_id": "I01",
+      "outcome": "BOUNDARY_CROSSING",
+      "start_timestamp": 2.0,
+      "end_timestamp": 5.767,
+      "customer_track_ids": [
+        1
+      ],
+      "staff_track_ids": [],
+      "crossing_count": 1,
+      "crossing_directions": [
+        "customer_to_staff"
+      ],
+      "contact_assessment": null,
+      "handshake_score": null,
+      "contact_score": null,
+      "event_ids": [
+        "E001"
+      ],
+      "interpretation": "Customer's hand reached across the counter into the staff side (0.3 forearm lengths past the line)",
+      "state_path": [
+        "HAND_APPROACHING",
+        "BOUNDARY_CROSSED"
+      ],
+      "uncertainty_reason": [],
+      "status": "closed"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "E001",
+      "event_type": "BOUNDARY_CROSSING",
+      "start_timestamp": 2.0,
+      "start_frame": 62,
+      "confirmed_timestamp": 2.067,
+      "end_timestamp": 5.767,
+      "end_frame": 172,
+      "status": "closed",
+      "customer_track_id": 1,
+      "staff_track_id": null,
+      "track_id_changes": [],
+      "crossing_direction": "customer_to_staff",
+      "hands": [
+        "customer:R"
+      ],
+      "minimum_wrist_distance_px": null,
+      "minimum_hand_distance_px": null,
+      "minimum_hand_distance_forearms": null,
+      "max_boundary_penetration_px": 30.4,
+      "keypoint_conf_mean": 0.991,
+      "keypoint_conf_min": 0.989,
+      "evidence_score": null,
+      "handshake_score": null,
+      "contact_score": null,
+      "interpretation": "Customer's hand reached across the counter into the staff side (0.3 forearm lengths past the line)",
+      "interaction_state": "BOUNDARY_CROSSED",
+      "uncertainty_reason": [],
+      "start_reason": "customer R wrist: confirmed HOME->FAR transition",
+      "end_reason": "wrist_returned_home",
+      "evidence_summary": "R wrist(s) on far side, max penetration 30px (0.27 forearms)",
+      "related_event_ids": [],
+      "shared": false,
+      "interaction_id": "I01",
+      "duration_seconds": 3.767
+    }
+  ],
+  "suppressed_candidates": [],
+  "candidate_episodes": [],
+  "notes": [],
+  "state_timeline": [
+    {
+      "state": "NO_ACTIVE_INTERACTION",
+      "start": 0.0,
+      "end": 1.0
+    },
+    {
+      "state": "HAND_APPROACHING",
+      "start": 1.033,
+      "end": 2.033
+    },
+    {
+      "state": "BOUNDARY_CROSSED",
+      "start": 2.067,
+      "end": 5.767
+    },
+    {
+      "state": "NO_ACTIVE_INTERACTION",
+      "start": 5.8,
+      "end": 5.867
+    }
+  ],
+  "pair_states": {
+    "C1-S2": [
+      {
+        "state": "HAND_APPROACHING",
+        "start": 1.833,
+        "end": 2.033
+      },
+      {
+        "state": "BOUNDARY_CROSSED",
+        "start": 2.067,
+        "end": 5.767
+      },
+      {
+        "state": "NO_ACTIVE_INTERACTION",
+        "start": 5.8,
+        "end": 5.867
+      }
+    ]
+  }
+}

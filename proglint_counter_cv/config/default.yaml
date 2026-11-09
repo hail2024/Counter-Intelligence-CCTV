@@ -1,0 +1,206 @@
+# Proglint Counter Intelligence - global processing configuration.
+#
+# Camera-specific geometry (counter boundary, customer/staff regions) is NOT stored here.
+# It lives in config/cameras/<camera>.yaml and must be calibrated for each camera view.
+#
+# Units used below:
+#   *_s      seconds of video time (converted to frames using the video's own timestamps,
+#            so behaviour is the same at 24, 30 or 60 FPS)
+#   *_ratio  multiples of the person's forearm length (elbow->wrist) measured in the image.
+#            This makes distance thresholds independent of resolution and camera distance.
+#   *_px     image pixels of the ORIGINAL video resolution
+#
+# All interaction thresholds are PROVISIONAL: initial values were chosen from the geometry of
+# a handshake (two hands overlap ~0.3-0.5 forearm lengths apart) and checked on the clips listed
+# in docs/TEST_RESULTS.md. Recalibrate them for a new camera if the test report shows errors.
+
+model:
+  path: models/yolo26s-pose.pt   # Ultralytics COCO-17 keypoint pose checkpoint
+  imgsz: 640                     # inference size (long side). Larger = slower, better small-person recall
+  detection_conf: 0.30           # minimum person-box confidence passed to the tracker
+  iou: 0.60                      # NMS IoU
+  device: cpu                    # "cpu", "0" (first CUDA GPU) or "auto"
+  # Inference runtime for the SAME checkpoint. "openvino" exports models/<checkpoint> once per input shape
+  # (cached in models/openvino/) and runs ~2.4x faster on CPU; keypoints agree with "torch" to ~0.5 px (median,
+  # measured on real_test.mp4). Falls back to "torch" if the export fails. Use "torch" on a CUDA GPU.
+  backend: openvino
+
+tracking:
+  tracker_type: bytetrack        # bytetrack | botsort (Ultralytics built-in trackers)
+  track_high_thresh: 0.40        # detections above this are matched in the first association pass
+  track_low_thresh: 0.10         # second-pass (low score) association threshold
+  new_track_thresh: 0.45         # minimum score to start a new track
+  track_buffer_s: 1.0            # how long a lost track is kept for re-association (seconds)
+  match_thresh: 0.80             # IoU matching threshold
+  fuse_score: true
+
+keypoints:
+  wrist_conf: 0.50               # wrist keypoints below this confidence are treated as MISSING
+  elbow_conf: 0.40
+  shoulder_conf: 0.40
+  edge_margin_px: 2              # keypoints this close to the frame edge are treated as missing
+  # Pose models locate the wrist joint, not the hand. When two people shake hands their WRISTS
+  # are ~one hand-length apart. The "hand proxy" extrapolates past the wrist along the forearm:
+  #   hand = wrist + hand_extension_ratio * (wrist - elbow)
+  hand_extension_ratio: 0.35
+  # Fingertip of a straight hand = wrist + fingertip_ratio x forearm, along the forearm. 0.74 = adult hand length /
+  # forearm length (anthropometric segment table, Drillis & Contini: hand 0.108 H, forearm 0.146 H). Each hand is
+  # modelled as the segment wrist -> fingertip; see contact.touch_* for how it is used.
+  fingertip_ratio: 0.74
+  smoothing_alpha: 0.60          # EMA weight of the newest observation (1.0 = no smoothing)
+  # A wrist whose forearm length is implausible for that person is rejected (catches keypoints
+  # that jump to another, overlapping person). Bounds are multiples of the person's median forearm.
+  forearm_plausibility: [0.35, 2.5]
+  scale_history: 30              # forearm samples kept per track for the median person scale
+
+roles:
+  # A person is a customer/staff candidate only if their shoulder anchor lies inside that
+  # configured region. People outside both regions (passers-by, background) are ignored.
+  # Ignore people whose box is shorter than this fraction of the frame height (background people).
+  # "auto" = background_height_ratio x the height of the smaller of the two main participants, measured from the video.
+  min_person_height_frac: auto
+  background_height_ratio: 0.35  # "auto": people shorter than this x the smaller main participant are background
+  # Who is the staff member (automatic setup, side views). "activity": the person who keeps the hands up at the desk
+  # and still (working, typing) is staff; the person whose hands hang lower and move (reaching) is the customer.
+  # Checked on 10 side-view project videos (seated and standing staff, both on the left and on the right): 10/10.
+  # If the two cues do not clearly agree (score < staff_rule_min_margin) or the view is top-down, the left/top
+  # person is the customer and the run report says the roles are UNCERTAIN. "position": always left/top = customer.
+  staff_rule: activity
+  staff_rule_min_margin: 0.5
+  confirm_frames: 3              # consistent region votes needed before a track gets a role
+  window_frames: 15              # vote window; a role only changes if the other role wins this window
+
+crossing:
+  # Crossing rule: which point of the arm must pass the counter line.
+  #   hand  = estimated hand centre (wrist + hand_extension along the forearm) - a reaching hand crosses first
+  #   wrist = the wrist keypoint itself (stricter)
+  point: hand
+  hysteresis_ratio: 0.15         # wrist must be this far beyond the boundary to count as on a side
+  hysteresis_min_px: 4           # ...but never less than this many pixels
+  persist_s: 0.10                # a side change must hold this long (debounces keypoint jitter)
+  max_gap_s: 0.30                # missing-wrist gap that still preserves the known side; longer = side unknown
+  rearm_s: 1.0                   # a re-crossing within this time after an episode ends re-opens the same event
+  interaction_rearm_s: 10.0      # ...while the person is in an ongoing contact episode, hands going back and forth over
+                                 # the line (e.g. during a long handshake) continue the same crossing record
+  approach_ratio: 1.0            # a wrist within this distance of the boundary and moving toward it is "approaching"
+  approach_hold_s: 0.3           # ...and stays "approaching" this long after the last such frame (no per-frame flicker)
+  max_episode_s: 60              # hard timeout for one crossing episode
+
+contact:
+  enter_ratio: 0.60              # hand proxies closer than this -> close
+  exit_ratio: 0.90               # ...and stay close until they are farther than this (hysteresis)
+  min_contact_s: 0.50            # accumulated close time required for LIKELY_HAND_CONTACT
+  min_close_ratio: 0.70          # fraction of jointly-visible episode frames that must be close
+  max_relative_speed: 3.0        # median hand-to-hand relative speed while close (forearms/s). Waving/passing hands move faster
+  separation_s: 0.40             # hands apart this long -> episode ends
+  missing_tolerance_s: 0.70      # no usable evidence this long -> episode ends (evidence_lost)
+  cooldown_s: 1.0                # after an episode ends, renewed contact within this time re-opens the SAME event
+  uncertain_min_s: 0.20          # an unconfirmed episode with at least this much slow close time is logged UNCERTAIN
+  # One hand visible, the other person's wrist hidden: the hidden hand can lie up to (1 + hand_extension)
+  # forearms from its elbow, so the visible hand is only "clearly apart" beyond that plus exit_ratio.
+  partial_near_ratio: 2.25
+  ambiguity_ratio: 1.25          # a hand close to two counterparts whose distances differ by less than this factor is ambiguous
+  approach_ratio: 2.0            # hands within this distance and closing -> HAND_APPROACHING
+  # Fingertip touch (palms apart). Each hand is the segment wrist -> fingertip (keypoints.fingertip_ratio). When the two
+  # segments come within touch_enter_ratio (and stay within touch_exit_ratio) while the palm points are NOT close,
+  # a separate touch episode is evaluated with explicit rules - the trained classifier is not used for it:
+  #   LIKELY_HAND_CONTACT  touch >= min_contact_s, in >= min_close_ratio of the frames, slow relative motion, and BOTH
+  #                        people reached out (paired-hand evidence: a hand reaching over someone's typing hand is not
+  #                        contact). Never a handshake (no palm clasp).
+  #   UNCERTAIN            slow touch >= uncertain_min_s that misses one of those criteria; shorter -> suppressed.
+  # Measured on the 15 labelled videos: every labelled contact brings the segments within 0.20 for >= 0.37 s; outside
+  # labelled exchanges they stay within 0.20 for at most 0.33 s.
+  touch_enter_ratio: 0.20
+  touch_exit_ratio: 0.30
+  # Paired-hand evidence for a touch: both hands moved out (as for contact), OR a HELD touch: both hands extended
+  # >= engaged_reach toward the other person, meeting tip to tip (closest point >= touch_tip_min along each hand,
+  # 1 = fingertip) and steady (median relative speed <= touch_hold_max_speed forearms/s). Measured: the fingertip
+  # touch clip 1.00/1.00 at 0.30; a reach OVER typing hands (5real) 0.73/0.77 at 0.86-2.78. ONE positive example:
+  # provisional, recalibrate with more footage.
+  touch_tip_min: 0.85
+  touch_hold_max_speed: 0.5
+  # Hands NEAR (segments within touch_near_ratio) already start the validation: POSSIBLE_HAND_CONTACT. Held near for
+  # >= min_contact_s by two people reaching out, slow, but never touching -> UNCERTAIN ("never touched"); shorter -> logged only.
+  touch_near_ratio: 0.35
+  # Occlusion: contact (palm or fingertip) is confirmed only if at least ONE of the two wrists is clearly visible -
+  # median wrist confidence >= visible_conf during the contact. Both below -> UNCERTAIN ("hands hidden / low keypoint
+  # confidence", as the assignment defines UNCERTAIN). Measured: hands behind a laptop 0.88 / 0.93; every visible contact
+  # had one hand >= 0.97 (a close-up handshake with one hand at the frame edge: 0.99 / 0.89). ONE occluded example.
+  visible_conf: 0.95
+  max_episode_s: 120             # hard timeout for one contact episode
+  # Paired-hand evidence: each hand's reach toward the other person is compared with its own smallest reach in
+  # the window [t - engagement_window_s, t - engagement_lag_s]. A resting/typing hand is not "engaged".
+  engagement_window_s: 2.0
+  engagement_lag_s: 0.3
+  engagement_min_history_s: 0.5  # the hand must have been seen this long before, else its baseline is unknown
+  # Mutual reach (needed for a HANDSHAKE, not for contact): each hand must have come out toward the other person.
+  min_engagement: 0.03           # moved out by >= this (fraction of the distance between the two people), or
+  engaged_prior_reach: 0.45      # was already held out this far before the episode (interaction already under way), or
+  engaged_reach: 0.30            # when its earlier position is unknown, is extended >= this far toward them
+
+# A likely hand contact becomes a LIKELY_HANDSHAKE when its handshake score reaches score_threshold.
+# score = w_duration * duration + w_pumping * pumping + w_comovement * moving_together + w_extension * arms_extended
+# (each component in 0..1; weights sum to 1). It is a transparent rule-based evidence score, NOT a trained probability.
+handshake:
+  score_threshold: 0.60
+  duration_start_s: 0.50         # duration component: 0 at this close time ...
+  duration_full_s: 1.00          # ... rising to 1 at this close time
+  w_duration: 0.30
+  w_pumping: 0.35                # up/down "pump" of the clasped hands (direction reversals of their midpoint)
+  w_comovement: 0.15             # the two hands move together (small spread of their relative offset)
+  w_extension: 0.20              # both arms extended toward each other (neutral 0.5 when not measurable)
+  min_reversals: 2               # reversals for full pumping credit
+  min_amplitude_ratio: 0.06      # minimum swing between reversals (forearms)
+  max_relative_std: 0.40         # relative-offset spread (forearms) at which co-movement credit reaches 0
+  min_extension_ratio: 1.3       # shoulder->wrist / forearm; ~1 bent resting arm, ~2 fully extended
+  extension_min_observed: 0.30   # arm extension counts only if measurable in this fraction of close frames
+  min_motion_reversals: 2        # with the trained model: a handshake also needs at least this many pump reversals
+                                 # (a motionless clasp is contact, not a handshake-like motion pattern)
+  clasp_distance: 0.20           # hand centres closer than this (forearms) = palms clasped
+  min_clasp_frac: 0.30           # a handshake needs the hands clasped in at least this share of the close frames.
+                                 # Measured: handshakes 0.45-0.71; object hand-overs (bottle, coin, keyboard) 0.00-0.06,
+                                 # because the item keeps the hands apart. Fixed physical rule, not learned.
+  clasp_window_s: 0.5            # the clasp share used is the PEAK reached after the hands were together this long
+                                 # (a grip loosening before release does not undo an established clasp)
+
+# Trained episode classifier (tools/train_classifier.py). Without the model file the rule-based scores
+# above are used. Probabilities are from logistic regression trained on labelled episodes of the project videos.
+classifier:
+  enabled: true
+  model_path: models/interaction_model.json
+  contact_threshold: 0.5         # P(contact) must EXCEED this for LIKELY_HAND_CONTACT (0.5 = coin flip is not enough)
+  handshake_threshold: 0.5       # P(handshake) must EXCEED this for LIKELY_HANDSHAKE
+  uncertain_min_prob: 0.25       # below this (and no occlusion), a close approach is a one-sided reach: no contact record
+  one_sided_factor: 0.3          # P(handshake) is multiplied by this when only one person's hand reached out
+  stable_s: 0.3                  # P(contact) must stay above contact_threshold this long before a record is opened
+
+# Counting unit for the dashboard and the "interactions" export: one INTERACTION = one customer-staff exchange.
+# The ledger rows (crossings and the single contact assessment of an episode) are observations of an interaction.
+# A new row joins an existing interaction when it involves one of the same people and starts while that
+# interaction is active or within join_gap_s of its end. Different people never share an interaction unless the
+# engine links them: a contact episode between them, or (link_paired_crossings) both reaching across at the same
+# time with their hands within contact.approach_ratio of each other.
+interactions:
+  join_gap_s: 1.0
+  link_paired_crossings: true
+
+identity:
+  switch_window_s: 1.0           # a new track appearing within this time of a same-role track being lost...
+  switch_radius_ratio: 2.0       # ...and within this distance (forearms) of where it was lost is a possible ID switch
+
+scene:
+  cut_detection: true            # detect camera cuts (edited footage); episodes are closed and tracks reset at a cut
+  cut_threshold: 0.45            # histogram (Bhattacharyya) distance between consecutive frames that counts as a cut
+  view_similarity_min: 0.55      # if a frame differs this much from the calibration reference, analysis pauses
+
+video:
+  stride: 1                      # analyse every Nth frame (2 halves compute; time-based thresholds still apply)
+  max_frames: null               # stop after N frames (null = whole video)
+
+output:
+  annotated_dir: outputs/annotated
+  events_dir: outputs/events
+  reports_dir: outputs/reports
+  cache_dir: outputs/cache
+  h264: true                     # transcode the annotated video to H.264 with the bundled ffmpeg (browser playable)
+  trail_frames: 20               # wrist trajectory length drawn on the annotated video

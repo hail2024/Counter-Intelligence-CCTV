@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+models/*.pt
+data/input/*
+!data/input/.gitkeep
+outputs/annotated/*
+outputs/cache/*
+outputs/streamlit.log
+!outputs/**/.gitkeep
+**/venv/
+**/.venv/
+__pycache__/
+*.pyc
+node_modules/
+.env

@@ -1,0 +1,114 @@
+{
+  "contact": {
+    "features": [
+      "close_time",
+      "close_ratio",
+      "min_d",
+      "mean_d",
+      "engage_min"
+    ],
+    "mean": [
+      1.7085235294117647,
+      0.6828647058823529,
+      0.22701764705882352,
+      0.37417647058823533,
+      0.10017058823529412
+    ],
+    "scale": [
+      2.6288368464643677,
+      0.1370232867335565,
+      0.1896951617581842,
+      0.1573652197518348,
+      0.13988872369601862
+    ],
+    "coef": [
+      0.19970953961393326,
+      0.7511299389500877,
+      -0.6213813284586478,
+      -0.7094392256587678,
+      0.5015097092834305
+    ],
+    "intercept": 1.018668021287636
+  },
+  "handshake": {
+    "features": [
+      "close_time",
+      "min_d",
+      "reach_sym",
+      "comove",
+      "reversals"
+    ],
+    "mean": [
+      1.6807849999999998,
+      0.20798499999999995,
+      0.13787999999999997,
+      0.586895,
+      3.15
+    ],
+    "scale": [
+      2.4165602771863566,
+      0.16557618873195507,
+      0.09173545988329704,
+      0.23167723555627986,
+      4.327528162819972
+    ],
+    "coef": [
+      0.257418252905999,
+      -0.9231575719772678,
+      -0.3232102928931015,
+      0.36361494214984896,
+      0.44704978059433853
+    ],
+    "intercept": 0.057512782957036615
+  },
+  "meta": {
+    "trained": "2026-10-26T13:15:26",
+    "videos": [
+      "10real_testcase",
+      "11real_testcase",
+      "12real_testcase",
+      "2real_testcase",
+      "3real_testcase",
+      "4real_testcase",
+      "5real_testcase",
+      "8real_testcases",
+      "mixkit_5537",
+      "mixkit_8909",
+      "real_test",
+      "test"
+    ],
+    "contact_examples": {
+      "positive": 12,
+      "negative": 5
+    },
+    "handshake_examples": {
+      "positive": 11,
+      "negative": 9
+    },
+    "model_type": "logistic",
+    "leave_one_video_out": {
+      "CROSSING": {
+        "tp": 7,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.875
+      },
+      "CONTACT": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.917
+      },
+      "HANDSHAKE": {
+        "tp": 8,
+        "fp": 1,
+        "fn": 3,
+        "precision": 0.889,
+        "recall": 0.727
+      }
+    },
+    "inference_backend": "openvino"
+  }
+}

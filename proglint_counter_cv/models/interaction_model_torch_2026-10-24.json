@@ -1,0 +1,113 @@
+{
+  "contact": {
+    "features": [
+      "close_time",
+      "close_ratio",
+      "min_d",
+      "mean_d",
+      "engage_min"
+    ],
+    "mean": [
+      1.7809249999999999,
+      0.70075,
+      0.22030625,
+      0.36431250000000004,
+      0.10308125000000001
+    ],
+    "scale": [
+      2.6149613014583983,
+      0.1221886297901732,
+      0.1940699792238292,
+      0.15861127747972398,
+      0.14455383607306138
+    ],
+    "coef": [
+      0.18786234683305267,
+      0.6124884170016182,
+      -0.644294395856863,
+      -0.6816337582400416,
+      0.575798823182645
+    ],
+    "intercept": 1.249492230062978
+  },
+  "handshake": {
+    "features": [
+      "close_time",
+      "min_d",
+      "reach_sym",
+      "comove",
+      "reversals"
+    ],
+    "mean": [
+      1.6657799999999998,
+      0.20810499999999998,
+      0.13905,
+      0.58618,
+      3.1
+    ],
+    "scale": [
+      2.35221706324055,
+      0.16517553534043714,
+      0.0923123312456142,
+      0.22747257768794907,
+      4.3
+    ],
+    "coef": [
+      0.2668101164995772,
+      -0.9160284190911854,
+      -0.31025070529128,
+      0.2998040745066847,
+      0.5284690568789383
+    ],
+    "intercept": 0.07727156825412188
+  },
+  "meta": {
+    "trained": "2026-10-24T22:15:21",
+    "videos": [
+      "10real_testcase",
+      "11real_testcase",
+      "12real_testcase",
+      "2real_testcase",
+      "3real_testcase",
+      "4real_testcase",
+      "5real_testcase",
+      "8real_testcases",
+      "mixkit_5537",
+      "mixkit_8909",
+      "real_test",
+      "test"
+    ],
+    "contact_examples": {
+      "positive": 12,
+      "negative": 4
+    },
+    "handshake_examples": {
+      "positive": 11,
+      "negative": 9
+    },
+    "model_type": "logistic",
+    "leave_one_video_out": {
+      "CROSSING": {
+        "tp": 7,
+        "fp": 1,
+        "fn": 1,
+        "precision": 0.875,
+        "recall": 0.875
+      },
+      "CONTACT": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 1,
+        "precision": 1.0,
+        "recall": 0.917
+      },
+      "HANDSHAKE": {
+        "tp": 9,
+        "fp": 1,
+        "fn": 2,
+        "precision": 0.9,
+        "recall": 0.818
+      }
+    }
+  }
+}

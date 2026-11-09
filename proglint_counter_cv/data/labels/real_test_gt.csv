@@ -1,0 +1,8 @@
+# Labelled from contact sheets at 4-6 frame steps (~0.15-0.2 s resolution) by one annotator.
+# No CROSSING rows: the wrist keypoints never pass the desk midline (hands meet on it), so crossing is not scored here.
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,1.55,2.90,,handshake: hands clasped f48-f84
+HANDSHAKE,1.55,2.90,,hands clasped and pumping
+AMBIGUOUS_CONTACT,4.40,5.30,,bottle hand-over customer->staff: both hands on the bottle; skin contact not determinable
+AMBIGUOUS_CONTACT,7.70,8.70,,bottle hand-over staff->customer: as above
+AMBIGUOUS_CONTACT,16.00,17.00,,small blue object hand-over: as above

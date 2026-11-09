@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "video": "4.likely hand contact.mp4",
+    "camera": "4.likely hand contact (auto)",
+    "model": "models/yolo26s-pose.pt",
+    "stats": {
+      "frames_processed": 98,
+      "stride": 1,
+      "elapsed_s": 37.42,
+      "throughput_fps": 2.62,
+      "pose_inference_ms_per_frame": 172.9,
+      "detections_from_cache": false,
+      "scene_cuts": [],
+      "id_switches": [],
+      "untracked_detections": 0,
+      "setup": "automatic",
+      "setup_info": {
+        "participants": [
+          3,
+          4
+        ],
+        "layout": "side by side",
+        "customer_anchor": [
+          703.6,
+          268.4
+        ],
+        "staff_anchor": [
+          253.2,
+          372.4
+        ],
+        "min_person_height_px": 118.8,
+        "line_position": 0.425,
+        "line_rule": "midway between the two people's usual hand positions",
+        "customer_track": 3,
+        "staff_track": 4,
+        "role_rule": "staff = the person working at the desk (hands kept up and still), score 5.0",
+        "role_score": 4.99,
+        "role_cues": {
+          "hand_drop_forearms": [
+            2.02,
+            0.72
+          ],
+          "hand_movement_forearms_per_s": [
+            1.23,
+            0.57
+          ]
+        },
+        "roles_uncertain": false,
+        "swapped": false
+      },
+      "device": "cpu",
+      "inference_backend": "openvino",
+      "platform": "Windows-10-10.0.26100-SP0"
+    },
+    "warnings": []
+  },
+  "counting_rules": {
+    "unit": "one row per observation episode (a crossing, or the contact assessment of a customer-staff episode); rows of the same exchange share an interaction_id",
+    "interaction_unit": "one interaction per customer-staff exchange; outcome = strongest row (LIKELY_HANDSHAKE > LIKELY_HAND_CONTACT > UNCERTAIN > BOUNDARY_CROSSING)",
+    "mutually_exclusive": [
+      "LIKELY_HAND_CONTACT",
+      "LIKELY_HANDSHAKE",
+      "UNCERTAIN"
+    ],
+    "separate_family": "BOUNDARY_CROSSING",
+    "distance_units": "pixels of the original video; *_forearms = multiples of forearm length"
+  },
+  "counts": {
+    "BOUNDARY_CROSSING": 0,
+    "LIKELY_HAND_CONTACT": 1,
+    "LIKELY_HANDSHAKE": 0,
+    "UNCERTAIN": 0
+  },
+  "interaction_counts": {
+    "total": 1,
+    "LIKELY_HANDSHAKE": 0,
+    "LIKELY_HAND_CONTACT": 1,
+    "UNCERTAIN": 0,
+    "BOUNDARY_CROSSING": 0
+  },
+  "interactions": [
+    {
+      "interaction_id": "I01",
+      "outcome": "LIKELY_HAND_CONTACT",
+      "start_timestamp": 2.067,
+      "end_timestamp": 3.267,
+      "customer_track_ids": [
+        3
+      ],
+      "staff_track_ids": [
+        4
+      ],
+      "crossing_count": 0,
+      "crossing_directions": [],
+      "contact_assessment": "LIKELY_HAND_CONTACT",
+      "handshake_score": null,
+      "contact_score": 88,
+      "event_ids": [
+        "E001"
+      ],
+      "interpretation": "Likely hand contact (1.1s) - fingertips met and stayed together, both hands held out to each other; palms did not clasp, so not a handshake (contact 88%)",
+      "state_path": [
+        "HAND_APPROACHING",
+        "POSSIBLE_HAND_CONTACT",
+        "LIKELY_HAND_CONTACT"
+      ],
+      "uncertainty_reason": [],
+      "status": "closed"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "E001",
+      "event_type": "LIKELY_HAND_CONTACT",
+      "start_timestamp": 2.067,
+      "start_frame": 62,
+      "confirmed_timestamp": 2.7,
+      "end_timestamp": 3.267,
+      "end_frame": 97,
+      "status": "closed",
+      "customer_track_id": 3,
+      "staff_track_id": 4,
+      "track_id_changes": [],
+      "crossing_direction": null,
+      "hands": [
+        "customer:R",
+        "staff:R"
+      ],
+      "minimum_wrist_distance_px": null,
+      "minimum_hand_distance_px": null,
+      "minimum_hand_distance_forearms": 0.083,
+      "max_boundary_penetration_px": null,
+      "keypoint_conf_mean": 0.985,
+      "keypoint_conf_min": 0.979,
+      "evidence_score": 0.875,
+      "handshake_score": null,
+      "contact_score": 88,
+      "interpretation": "Likely hand contact (1.1s) - fingertips met and stayed together, both hands held out to each other; palms did not clasp, so not a handshake (contact 88%)",
+      "interaction_state": "LIKELY_HAND_CONTACT",
+      "uncertainty_reason": [],
+      "start_reason": "fingertips met: hand segments within contact.touch_enter_ratio, palms apart",
+      "end_reason": "video_end",
+      "evidence_summary": "fingertip touch 1.07s over 32 frames; hands near 1.23s; touch ratio 0.89; closest hand segments 0.08 forearms; median relative speed 0.28 forearms/s; paired-hand evidence: held tip-to-tip touch; decided by rules (contact.touch_*), not by the trained classifier",
+      "related_event_ids": [],
+      "shared": false,
+      "interaction_id": "I01",
+      "duration_seconds": 1.2
+    }
+  ],
+  "suppressed_candidates": [],
+  "candidate_episodes": [
+    {
+      "customer_track_id": 3,
+      "staff_track_id": 4,
+      "kind": "touch",
+      "start": 2.067,
+      "end": 3.267,
+      "end_reason": "video_end",
+      "event_id": "E001",
+      "outcome": "LIKELY_HAND_CONTACT",
+      "p_contact": null,
+      "p_handshake": null,
+      "features": {}
+    }
+  ],
+  "notes": [],
+  "state_timeline": [
+    {
+      "state": "NO_ACTIVE_INTERACTION",
+      "start": 0.0,
+      "end": 1.033
+    },
+    {
+      "state": "HAND_APPROACHING",
+      "start": 1.067,
+      "end": 2.033
+    },
+    {
+      "state": "POSSIBLE_HAND_CONTACT",
+      "start": 2.067,
+      "end": 2.667
+    },
+    {
+      "state": "LIKELY_HAND_CONTACT",
+      "start": 2.7,
+      "end": 3.267
+    }
+  ],
+  "pair_states": {
+    "C3-S4": [
+      {
+        "state": "HAND_APPROACHING",
+        "start": 1.1,
+        "end": 2.033
+      },
+      {
+        "state": "POSSIBLE_HAND_CONTACT",
+        "start": 2.067,
+        "end": 2.667
+      },
+      {
+        "state": "LIKELY_HAND_CONTACT",
+        "start": 2.7,
+        "end": 3.267
+      }
+    ]
+  }
+}

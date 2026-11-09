@@ -1,0 +1,4 @@
+# Labelled from frame sheets (0.15-0.25 s steps), one annotator. Roles left blank (any person).
+category,start_timestamp,end_timestamp,role,notes
+CROSSING,0.70,1.70,,standing customer leans over and reaches to the staff's keyboard
+AMBIGUOUS_CONTACT,0.90,1.50,,customer's fingers on the keyboard right beside the staff's typing hands

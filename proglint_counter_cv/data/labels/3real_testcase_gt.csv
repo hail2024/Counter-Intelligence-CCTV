@@ -1,0 +1,7 @@
+# Labelled from frame sheets (0.15-0.25 s steps), one annotator. Roles left blank (any person).
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,1.90,3.15,,handshake
+HANDSHAKE,1.90,3.15,,
+AMBIGUOUS_CONTACT,4.00,4.90,,phone hand-over (both hands on the phone)
+CONTACT,7.40,8.30,,small item passed hand to hand; fingertips touch - giving/taking, not a handshake
+AMBIGUOUS_CONTACT,12.40,13.70,,phone hand-over (both hands on the phone)

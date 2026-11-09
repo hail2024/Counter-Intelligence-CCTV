@@ -1,0 +1,7 @@
+# Labelled from frame sheets (0.2 s steps), one annotator. Roles left blank (any person).
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,0.80,2.90,,handshake across the table
+HANDSHAKE,0.80,2.90,,
+CROSSING,0.80,2.90,,customer's hand reaches over for the handshake
+AMBIGUOUS_CONTACT,5.10,6.90,,staff hands a bottle to the customer (object hand-over, not a handshake)
+AMBIGUOUS_CROSSING,5.10,6.90,,customer reaches for the bottle; whether the hand passes the line is unclear

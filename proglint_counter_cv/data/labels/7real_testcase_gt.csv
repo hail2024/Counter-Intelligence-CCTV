@@ -1,0 +1,7 @@
+# Labelled from frame sheets (0.15-0.25 s steps), one annotator. Roles left blank (any person).
+# interaction column (added 2026-10-26): the handshake and the reach are by DIFFERENT customers (per the notes),
+# so they are two exchanges even though their time intervals overlap.
+category,start_timestamp,end_timestamp,role,notes,interaction
+CONTACT,1.90,3.20,,handshake between the staff and the woman behind (multi-person scene),A
+HANDSHAKE,1.90,3.20,,,A
+CROSSING,2.10,3.40,,the man in front reaches across toward the staff's keyboard,B

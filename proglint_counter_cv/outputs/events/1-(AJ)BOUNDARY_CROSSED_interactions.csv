@@ -1,0 +1,2 @@
+interaction_id,outcome,start_timestamp,end_timestamp,customer_track_ids,staff_track_ids,crossing_count,crossing_directions,contact_assessment,handshake_score,contact_score,event_ids,interpretation,uncertainty_reason,status
+I01,BOUNDARY_CROSSING,2.0,5.767,1,,1,customer_to_staff,,,,E001,Customer's hand reached across the counter into the staff side (0.3 forearm lengths past the line),,closed

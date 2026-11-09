@@ -1,0 +1,5 @@
+# Labelled from frame sheets (0.15-0.25 s steps), one annotator. Roles left blank (any person).
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,2.00,3.20,,handshake (seated)
+HANDSHAKE,2.00,3.20,,
+AMBIGUOUS_CONTACT,4.90,6.30,,pen hand-over: the pen keeps the hands apart

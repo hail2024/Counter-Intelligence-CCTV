@@ -1,0 +1,6 @@
+# mixkit_5537 footage processed as a NEW upload (never used for tuning). Labelled from frames, one annotator.
+# After 4.4 s only the top person handles documents alone; no further hand interaction.
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,0.75,1.80,,handshake
+HANDSHAKE,0.75,1.80,,
+AMBIGUOUS_CONTACT,3.30,3.95,,staff slides the clipboard to the customer; fingertips reach the customer's folded hands - touch not determinable

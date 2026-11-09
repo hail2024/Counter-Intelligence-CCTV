@@ -1,0 +1,3 @@
+interaction_id,outcome,start_timestamp,end_timestamp,customer_track_ids,staff_track_ids,crossing_count,crossing_directions,contact_assessment,handshake_score,contact_score,event_ids,interpretation,uncertainty_reason,status
+I01,LIKELY_HANDSHAKE,0.633,3.197,2,1,1,customer_to_staff,LIKELY_HANDSHAKE,68,94,E001; E002,"Likely handshake (68%): hands together 2.5s, pumping motion, both arms extended",,closed
+I02,LIKELY_HAND_CONTACT,4.563,6.928,2,1,0,,LIKELY_HAND_CONTACT,15,84,E003,"Likely hand contact (1.8s) - hands met but never clasped, consistent with giving/taking an item or a light touch; not a handshake (handshake 15%, contact 84%)",,closed

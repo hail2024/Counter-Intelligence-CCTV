@@ -1,0 +1,2 @@
+interaction_id,outcome,start_timestamp,end_timestamp,customer_track_ids,staff_track_ids,crossing_count,crossing_directions,contact_assessment,handshake_score,contact_score,event_ids,interpretation,uncertainty_reason,status
+I01,LIKELY_HAND_CONTACT,2.067,3.267,3,4,0,,LIKELY_HAND_CONTACT,,88,E001,"Likely hand contact (1.1s) - fingertips met and stayed together, both hands held out to each other; palms did not clasp, so not a handshake (contact 88%)",,closed

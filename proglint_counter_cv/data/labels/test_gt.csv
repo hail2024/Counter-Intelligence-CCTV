@@ -1,0 +1,9 @@
+# Labelled from contact sheets (~0.2 s steps), one annotator.
+# 2.4-3.4 s and 19.0-19.8 s: staff slides the clipboard toward the customer; customer's hands stay folded -> no contact.
+category,start_timestamp,end_timestamp,role,notes
+CONTACT,0.00,0.95,,handshake at start
+HANDSHAKE,0.00,0.95,,
+CONTACT,16.40,17.45,,second handshake
+HANDSHAKE,16.40,17.45,,
+AMBIGUOUS_CROSSING,2.30,3.50,,staff slides the clipboard across the desk; whether the hand passes the midline is unclear
+AMBIGUOUS_CROSSING,18.90,19.90,,as above
